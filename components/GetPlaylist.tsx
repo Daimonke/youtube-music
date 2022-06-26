@@ -1,11 +1,16 @@
 import { Button, Container, TextField } from '@mui/material'
 import React, { useState } from 'react'
+import { motion } from "framer-motion"
+import { style } from '@mui/system';
+
 
 type Props = {
-    setSongs: (songs: any[]) => void
+    handleOpen: () => void;
+    setSongs: (songs: any[]) => void;
+    open: boolean;
 }
 
-const GetPlaylist = ({ setSongs }: Props) => {
+const GetPlaylist = ({ handleOpen, setSongs, open }: Props) => {
 
     const [url, setUrl] = useState('')
     const [inputLabel, setInputLabel] = useState('Playlist URL')
@@ -34,8 +39,13 @@ const GetPlaylist = ({ setSongs }: Props) => {
 
     return (
         <Container disableGutters>
-            <TextField fullWidth label={inputLabel} variant="outlined" onChange={(e) => setUrl(e.target.value)} error={error} />
-            <Button variant='contained' color='success' sx={styles.button} onClick={getPlaylist}>Get Playlist</Button>
+            <motion.div initial={{ height: 0 }}
+                animate={{ overflow: 'hidden', height: open ? 'auto' : 0 }} >
+                <Container disableGutters sx={styles.container}>
+                    <TextField fullWidth label={inputLabel} variant="outlined" onChange={(e) => setUrl(e.target.value)} error={error} />
+                    <Button variant='contained' color='success' sx={styles.button} onClick={getPlaylist}>Get Playlist</Button>
+                </Container>
+            </motion.div>
         </Container>
     )
 }
@@ -45,8 +55,16 @@ const styles = {
         display: 'block',
         margin: '0 auto',
         width: '50%',
-        mt: 1,
-        p: 2
+        mt: 2,
+        p: 2,
+    },
+    container: {
+        marginTop: 2,
+        padding: 2,
+        overflow: 'hidden',
+        borderRadius: '5px',
+        backgroundColor: 'rgb(238, 238, 238)',
+        boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.1)',
     }
 }
 
