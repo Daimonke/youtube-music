@@ -10,7 +10,7 @@ type Props = {
 }
 
 const Player = ({ songs }: Props) => {
-    const [currentSong, setCurrentSong] = useState(10);
+    const [currentSong, setCurrentSong] = useState(0);
     const [currentUrl, setCurrentUrl] = useState('');
 
     const handleSong = (song: any, index: number) => {
@@ -24,7 +24,7 @@ const Player = ({ songs }: Props) => {
     }
 
     useEffect(() => {
-        if (songs.length > 0) {
+        if (songs?.length > 0) {
             setCurrentSong(0);
             setCurrentUrl(getSongUrl(songs[0]));
         }
@@ -34,7 +34,7 @@ const Player = ({ songs }: Props) => {
 
     return (
         <Container disableGutters sx={styles.container}>
-            {songs.length === 0 ? <NoPlaylistBox /> :
+            {songs?.length === 0 ? <NoPlaylistBox /> :
                 <>
                     <ReactPlayer
                         fallback={<CircularProgress />}
@@ -44,9 +44,13 @@ const Player = ({ songs }: Props) => {
                         height='40vh'
                         playing={true}
                         light
+                        onEnded={() => {
+                            setCurrentSong(currentSong + 1);
+                            setCurrentUrl(getSongUrl(songs[currentSong + 1]));
+                        }}
                     />
                     <Container disableGutters sx={styles.songsContainer}>
-                        {songs.map((song, index) => (
+                        {songs?.map((song, index) => (
                             <Container disableGutters sx={[styles.songCard, index === currentSong ? styles.active : null]} key={index} className='background' onClick={() => handleSong(song, index)}>
                                 <Image src={song.snippet?.thumbnails?.high?.url}
                                     alt={song.snippet.title}
@@ -95,6 +99,9 @@ const styles = {
     },
     active: {
         backgroundColor: 'rgba(20, 162, 0, 0.4)',
+        '&:hover': {
+            backgroundColor: 'rgba(20, 162, 0, 0.6)'
+        },
     }
 }
 

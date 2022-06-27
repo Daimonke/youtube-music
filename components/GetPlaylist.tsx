@@ -19,10 +19,11 @@ const GetPlaylist = ({ setSongs, open }: Props) => {
         setInputLabel('Invalid playlist URL')
     }
 
-    const getPlaylist = async () => {
+    const getPlaylist = () => {
         if (!url || !url.includes('list=')) return displayError();
         const playlistId = url.split('list=')[1].split('&')[0]
-        await fetch(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=20&playlistId=${playlistId}&key=AIzaSyCxkr8mg3wTI8nvBBnr3ynOu-iHfb8YPgA`)
+        // get playlist
+        fetch(`/api/playlist/?playlistId=${playlistId}`)
             .then(res => res.json())
             .then(res => {
                 console.log(res.items)
