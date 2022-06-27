@@ -7,9 +7,10 @@ import GetPlaylist from './GetPlaylist';
 
 type Props = {
     setSongs: (songs: any[]) => void
+    songs: any[]
 }
 
-export default function PlaylistMenu({ setSongs }: Props) {
+export default function PlaylistMenu({ setSongs, songs }: Props) {
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => {
@@ -17,9 +18,9 @@ export default function PlaylistMenu({ setSongs }: Props) {
     };
 
     return (
-        <Container disableGutters >
+        <Container disableGutters sx={{ position: 'relative' }} >
             <Button variant='contained' color='primary' sx={styles.button} onClick={handleOpen}>Playlist Menu</Button>
-            <GetPlaylist handleOpen={handleOpen} setSongs={setSongs} open={open} />
+            <GetPlaylist handleOpen={handleOpen} setSongs={setSongs} open={open} songs={songs} />
         </Container>
     );
 }

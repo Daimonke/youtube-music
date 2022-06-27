@@ -8,11 +8,12 @@ type Props = {
     handleOpen: () => void;
     setSongs: (songs: any[]) => void;
     open: boolean;
+    songs: any[];
 }
 
-const GetPlaylist = ({ handleOpen, setSongs, open }: Props) => {
+const GetPlaylist = ({ handleOpen, setSongs, open, songs }: Props) => {
 
-    const [url, setUrl] = useState('')
+    const [url, setUrl] = useState('https://www.youtube.com/watch?v=15gGZQNlDVo&list=PL4GgJODQxydGVmSyYDn_zF4OS6w4Lw2p8&index=2')
     const [inputLabel, setInputLabel] = useState('Playlist URL')
     const [error, setError] = useState(false)
 
@@ -28,7 +29,7 @@ const GetPlaylist = ({ handleOpen, setSongs, open }: Props) => {
             .then(res => res.json())
             .then(res => {
                 console.log(res.items)
-                setSongs(res.items)
+                setSongs([...res.items, ...songs])
             }
             )
             .catch(() => {
@@ -38,7 +39,7 @@ const GetPlaylist = ({ handleOpen, setSongs, open }: Props) => {
     }
 
     return (
-        <Container disableGutters>
+        <Container disableGutters sx={{ position: 'absolute', zIndex: 1 }}>
             <motion.div initial={{ height: 0 }}
                 animate={{ overflow: 'hidden', height: open ? 'auto' : 0 }} >
                 <Container disableGutters sx={styles.container}>
