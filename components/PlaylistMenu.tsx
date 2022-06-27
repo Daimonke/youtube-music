@@ -8,9 +8,11 @@ import GetPlaylist from './GetPlaylist';
 type Props = {
     setSongs: (songs: any[]) => void
     songs: any[]
+    setNextToken: (token: string | null) => void
+    setCurrentPlaylistId: (id: string | null) => void
 }
 
-export default function PlaylistMenu({ setSongs, songs }: Props) {
+export default function PlaylistMenu({ setSongs, songs, setNextToken, setCurrentPlaylistId }: Props) {
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => {
@@ -20,7 +22,7 @@ export default function PlaylistMenu({ setSongs, songs }: Props) {
     return (
         <Container disableGutters sx={{ position: 'relative', pt: 2, height: '100%' }} >
             <Button variant='contained' color='primary' sx={styles.button} onClick={handleOpen}>Playlist Menu</Button>
-            <GetPlaylist setSongs={setSongs} open={open} />
+            <GetPlaylist handleOpen={handleOpen} setSongs={setSongs} open={open} setNextToken={setNextToken} setCurrentPlaylistId={setCurrentPlaylistId} />
         </Container>
     );
 }

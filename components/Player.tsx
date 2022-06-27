@@ -1,4 +1,4 @@
-import { CircularProgress, Container, Typography } from '@mui/material';
+import { Button, CircularProgress, Container, Typography } from '@mui/material';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
@@ -7,9 +7,13 @@ const ReactPlayer = dynamic(() => import("react-player/youtube"), { ssr: false }
 
 type Props = {
     songs: any[]
+    nextToken: string | null
+    currentPlaylistId: string | null
+    setSongs: (songs: any[]) => void
+    setNextToken: (token: string | null) => void
 }
 
-const Player = ({ songs }: Props) => {
+const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId }: Props) => {
     const [currentSong, setCurrentSong] = useState(0);
     const [currentUrl, setCurrentUrl] = useState('');
 
@@ -21,6 +25,26 @@ const Player = ({ songs }: Props) => {
     const getSongUrl = (song: any) => {
         if (!song) return '';
         return `https://www.youtube.com/watch?v=${song.snippet.resourceId.videoId}`
+    }
+
+    const handleLoadMore = () => {
+        if (!nextToken) return;
+        fetch(`/api/moreSongs/?playlistId=${currentPlaylistId}&pageToken=${nextToken}`)
+            .then(res => res.json())
+            .then(res => {
+                setSongs([...songs, ...res.items]);
+                setNextToken(res.nextPageToken);
+            }
+            )
+            .catch(() => {
+                setNextToken(null);
+            }
+            )
+
+    }
+
+    const handleScroll = (e: any) => {
+        if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight) handleLoadMore();
     }
 
     useEffect(() => {
@@ -49,16 +73,17 @@ const Player = ({ songs }: Props) => {
                             setCurrentUrl(getSongUrl(songs[currentSong + 1]));
                         }}
                     />
-                    <Container disableGutters sx={styles.songsContainer}>
+                    <Container disableGutters sx={styles.songsContainer} onScroll={handleScroll}>
                         {songs?.map((song, index) => (
                             <Container disableGutters sx={[styles.songCard, index === currentSong ? styles.active : null]} key={index} className='background' onClick={() => handleSong(song, index)}>
-                                <Image src={song.snippet?.thumbnails?.high?.url}
-                                    alt={song.snippet.title}
-                                    layout="fixed"
-                                    width={250}
-                                    height={120}
-                                    style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }}
-                                />
+                                {song?.snippet?.thumbnails?.high?.url ?
+                                    <Image src={song.snippet.thumbnails.high.url}
+                                        alt={song.snippet.title}
+                                        layout="fixed"
+                                        width={250}
+                                        height={120}
+                                        style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }}
+                                    /> : null}
                                 <p style={{ wordBreak: 'break-word', textAlign: 'left', width: '100%', padding: 5 }}>{song.snippet?.title}</p>
                             </Container>
                         ))}
@@ -72,6 +97,10 @@ const Player = ({ songs }: Props) => {
 const styles = {
     container: {
         mt: { xs: 2, md: 5 },
+        position: { xs: 'unset', md: 'absolute' },
+        left: { xs: 'unset', md: '50%' },
+        top: { xs: 'unset', md: '50%' },
+        transform: { xs: 'unset', md: 'translate(-50%, -50%)' },
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'space-between',
