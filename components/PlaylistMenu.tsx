@@ -22,7 +22,7 @@ export default function PlaylistMenu({ setSongs, songs, setNextToken, setCurrent
     return (
         <Container disableGutters sx={{ position: 'relative', pt: 2, height: '100%' }} >
             <Button variant='contained' color='primary' sx={styles.button} onClick={handleOpen}>Playlist Menu</Button>
-            ${open && (
+            {open && (
                 <GetPlaylist handleOpen={handleOpen} setSongs={setSongs} open={open} setNextToken={setNextToken} setCurrentPlaylistId={setCurrentPlaylistId} />
             )}
         </Container>
