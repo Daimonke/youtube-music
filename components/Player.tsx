@@ -97,10 +97,6 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId }:
 const styles = {
     container: {
         mt: { xs: 2, md: 5 },
-        position: { xs: 'unset', md: 'absolute' },
-        left: { xs: 'unset', md: '50%' },
-        top: { xs: 'unset', md: '50%' },
-        transform: { xs: 'unset', md: 'translate(-50%, -50%)' },
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'space-between',

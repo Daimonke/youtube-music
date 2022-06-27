@@ -26,7 +26,7 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
         event: React.MouseEvent<HTMLElement>,
         newAlignment: string,
     ) => {
-        setAlignment(newAlignment);
+        if (newAlignment === 'Add' || newAlignment === 'My') setAlignment(newAlignment);
     };
 
     const displayError = () => {
