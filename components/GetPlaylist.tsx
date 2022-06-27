@@ -19,6 +19,7 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
     const [inputLabel, setInputLabel] = useState('Playlist URL')
     const [error, setError] = useState(false)
     const [alignment, setAlignment] = useState('Add');
+    const [playlists, setPlaylists] = useState<any[]>([]);
 
     const handleTab = (
         event: React.MouseEvent<HTMLElement>,
@@ -43,18 +44,18 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
                 setSongs(res.items)
                 setError(false)
                 setInputLabel('Playlist URL')
-
                 const playlists = JSON.parse(localStorage.getItem('playlists') || '[]')
+                setPlaylists(playlists)
                 if (playlists.some((playlist: { url: string; }) => playlist.url === url)) return;
                 playlists.unshift({
                     name: name || 'Playlist',
                     url: url,
+                    totalResults: res.pageInfo.totalResults,
                 })
                 localStorage.setItem('playlists', JSON.stringify(playlists))
-                handleOpen()
-
             }
             )
+            .then(() => handleOpen())
             .catch(() => {
                 setError(true)
                 setInputLabel('Invalid Playlist URL')
@@ -88,19 +89,31 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
                     )}
                     {alignment === 'My' && (
                         <>
-                            <Container disableGutters sx={styles.buttons}>
-                                <Button variant='contained' color='error' sx={styles.button} onClick={handleOpen}>Close</Button>
-                            </Container>
+
+                            {playlists.map((playlist: {
+                                totalResults: number; url: string; name: string;
+                            }, index: number) => (
+                                <Container disableGutters key={index} sx={styles.playlist} className='background'>
+                                    <div>
+                                        <p>{index + 1}. {playlist.name}</p>
+                                        <p style={{ fontSize: '0.9em', color: 'gray' }}>{playlist.totalResults} songs</p>
+                                    </div>
+                                    <Button key={index} variant='text' color='primary' onClick={() => getPlaylist(playlist.url)}>Open</Button>
+                                </Container>
+                            ))}
+                            <Button variant='contained' color='error' sx={styles.button} onClick={handleOpen}>Close</Button>
                         </>
                     )}
                 </Container>
-            </motion.div>
-        </Container>
+            </motion.div >
+        </Container >
     )
 }
 
 const styles = {
     button: {
+        display: 'block',
+        margin: '0 auto',
         width: '20%',
         p: 1,
     },
@@ -120,6 +133,15 @@ const styles = {
         justifyContent: 'center',
         alignItems: 'center',
         gap: 2
+    },
+    playlist: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 2,
+        p: 2,
+        borderRadius: '5px',
+        backgroundColor: 'rgba(157, 157, 157, 0.25)',
     }
 }
 
