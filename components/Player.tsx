@@ -43,15 +43,11 @@ const Player = ({ songs }: Props) => {
                         width='100%'
                         height='40vh'
                         playing={true}
-                        volume={0.5}
-                        onReady={() => {
-                            console.log('onReady')
-                        }
-                        }
+                        light
                     />
                     <Container disableGutters sx={styles.songsContainer}>
                         {songs.map((song, index) => (
-                            <Container disableGutters sx={styles.songCard} key={index} onClick={() => handleSong(song, index)}>
+                            <Container disableGutters sx={styles.songCard} key={index} className='background' onClick={() => handleSong(song, index)}>
                                 <Image src={song.snippet?.thumbnails?.high?.url}
                                     alt={song.snippet.title}
                                     layout="fixed"
@@ -74,26 +70,30 @@ const styles = {
         mt: { xs: 2, md: 5 },
         display: 'flex',
         justifyContent: 'space-between',
+        alignItems: 'space-between',
         flexDirection: { xs: 'column', md: 'row' },
         gap: 2,
-        overflow: 'scroll',
     },
     songsContainer: {
+        mt: { xs: 2, md: 0 },
         overflow: 'scroll',
-        height: { xs: '45vh', md: '40vh' },
+        height: { xs: 'calc(60vh - 140px)', md: '40vh' },
     },
     songCard: {
+        color: 'white',
         display: 'flex',
         justifyContent: 'flex-start',
         gap: 2,
         width: '100%',
+        border: '1px solid white',
         borderRadius: '5px',
         boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
+        backgroundColor: 'lightgray',
         mb: 2,
         cursor: 'pointer',
         '&:hover': {
             boxShadow: '0px 0px 10px rgba(0,0,0,0.7)',
-            backgroundColor: 'rgb(222, 222, 222)',
+            backgroundColor: 'rgba(255, 255, 255, 0.4)'
         },
     },
 }

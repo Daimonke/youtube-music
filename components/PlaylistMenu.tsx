@@ -18,7 +18,7 @@ export default function PlaylistMenu({ setSongs, songs }: Props) {
     };
 
     return (
-        <Container disableGutters sx={{ position: 'relative', pt: 2 }} >
+        <Container disableGutters sx={{ position: 'relative', pt: 2, height: '100%' }} >
             <Button variant='contained' color='primary' sx={styles.button} onClick={handleOpen}>Playlist Menu</Button>
             <GetPlaylist setSongs={setSongs} open={open} />
         </Container>
@@ -29,6 +29,6 @@ const styles = {
     button: {
         display: 'block',
         margin: '0 auto',
-        width: '50%',
+        width: '60%',
     }
 }
