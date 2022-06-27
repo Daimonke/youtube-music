@@ -25,6 +25,7 @@ const Home: NextPage = () => {
           <meta name="description" content="Play your youtube playlist without any ads" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
+
         <Loading loading={loading} />
         <PlaylistMenu setSongs={setSongs} songs={songs} setNextToken={setNextToken} setCurrentPlaylistId={setCurrentPlaylistId} setLoading={setLoading} />
         <Player songs={songs} setSongs={setSongs} setNextToken={setNextToken} nextToken={nextToken} currentPlaylistId={currentPlaylistId} />
