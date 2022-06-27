@@ -45,6 +45,7 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId }:
 
     const handleScroll = (e: any) => {
         if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight) handleLoadMore();
+        console.log()
     }
 
     useEffect(() => {
@@ -60,19 +61,21 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId }:
         <Container disableGutters sx={styles.container}>
             {songs?.length === 0 ? <NoPlaylistBox /> :
                 <>
-                    <ReactPlayer
-                        fallback={<CircularProgress />}
-                        controls
-                        url={currentUrl}
-                        width='100%'
-                        height='40vh'
-                        playing={true}
-                        light
-                        onEnded={() => {
-                            setCurrentSong(currentSong + 1);
-                            setCurrentUrl(getSongUrl(songs[currentSong + 1]));
-                        }}
-                    />
+                    <Container disableGutters sx={{ height: { xs: '30vh', md: '50vh' } }} >
+                        <ReactPlayer
+                            fallback={<CircularProgress />}
+                            controls
+                            url={currentUrl}
+                            width='100%'
+                            height='100%'
+                            playing={true}
+                            light
+                            onEnded={() => {
+                                setCurrentSong(currentSong + 1);
+                                setCurrentUrl(getSongUrl(songs[currentSong + 1]));
+                            }}
+                        />
+                    </Container>
                     <Container disableGutters sx={styles.songsContainer} onScroll={handleScroll}>
                         {songs?.map((song, index) => (
                             <Container disableGutters sx={[styles.songCard, index === currentSong ? styles.active : null]} key={index} className='background' onClick={() => handleSong(song, index)}>
@@ -106,7 +109,7 @@ const styles = {
     songsContainer: {
         mt: { xs: 2, md: 0 },
         overflow: 'scroll',
-        height: { xs: 'calc(60vh - 140px)', md: '40vh' },
+        height: { xs: 'calc(70vh - 140px)', md: '50vh' },
     },
     songCard: {
         color: 'white',
