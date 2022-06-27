@@ -10,11 +10,11 @@ type Props = {
 }
 
 const Player = ({ songs }: Props) => {
-    const [currentSong, setCurrentSong] = useState('');
+    const [currentSong, setCurrentSong] = useState(10);
     const [currentUrl, setCurrentUrl] = useState('');
 
     const handleSong = (song: any, index: number) => {
-        setCurrentSong(song);
+        setCurrentSong(index);
         setCurrentUrl(getSongUrl(song));
     }
 
@@ -25,7 +25,7 @@ const Player = ({ songs }: Props) => {
 
     useEffect(() => {
         if (songs.length > 0) {
-            setCurrentSong(songs[0]);
+            setCurrentSong(0);
             setCurrentUrl(getSongUrl(songs[0]));
         }
     }
@@ -47,7 +47,7 @@ const Player = ({ songs }: Props) => {
                     />
                     <Container disableGutters sx={styles.songsContainer}>
                         {songs.map((song, index) => (
-                            <Container disableGutters sx={styles.songCard} key={index} className='background' onClick={() => handleSong(song, index)}>
+                            <Container disableGutters sx={[styles.songCard, index === currentSong ? styles.active : null]} key={index} className='background' onClick={() => handleSong(song, index)}>
                                 <Image src={song.snippet?.thumbnails?.high?.url}
                                     alt={song.snippet.title}
                                     layout="fixed"
@@ -85,17 +85,17 @@ const styles = {
         justifyContent: 'flex-start',
         gap: 2,
         width: '100%',
-        border: '1px solid white',
         borderRadius: '5px',
-        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
-        backgroundColor: 'lightgray',
+        backgroundColor: 'rgba(157, 157, 157, 0.25)',
         mb: 2,
         cursor: 'pointer',
         '&:hover': {
-            boxShadow: '0px 0px 10px rgba(0,0,0,0.7)',
-            backgroundColor: 'rgba(255, 255, 255, 0.4)'
+            backgroundColor: 'rgba(255, 255, 255, 0.3)'
         },
     },
+    active: {
+        backgroundColor: 'rgba(20, 162, 0, 0.4)',
+    }
 }
 
 export default Player
