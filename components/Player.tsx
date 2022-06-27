@@ -80,8 +80,8 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId }:
                                     <Image src={song.snippet.thumbnails.high.url}
                                         alt={song.snippet.title}
                                         layout="fixed"
-                                        width={250}
-                                        height={120}
+                                        width={200}
+                                        height={90}
                                         style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }}
                                     /> : null}
                                 <p style={{ wordBreak: 'break-word', textAlign: 'left', width: '100%', padding: 5 }}>{song.snippet?.title}</p>
@@ -101,7 +101,7 @@ const styles = {
         justifyContent: 'space-between',
         alignItems: 'space-between',
         flexDirection: { xs: 'column', md: 'row' },
-        gap: 2,
+        gap: { xs: 0, md: 2 },
     },
     songsContainer: {
         mt: { xs: 2, md: 0 },
@@ -116,7 +116,7 @@ const styles = {
         width: '100%',
         borderRadius: '5px',
         backgroundColor: 'rgba(157, 157, 157, 0.25)',
-        mb: 2,
+        mb: 1.2,
         cursor: 'pointer',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.3)'
