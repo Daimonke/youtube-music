@@ -20,12 +20,6 @@ const Home: NextPage = () => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <Container>
-        <Head>
-          <title>Youtube playlist player</title>
-          <meta name="description" content="Play your youtube playlist without any ads" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-
         <Loading loading={loading} />
         <PlaylistMenu setSongs={setSongs} songs={songs} setNextToken={setNextToken} setCurrentPlaylistId={setCurrentPlaylistId} setLoading={setLoading} />
         <Player songs={songs} setSongs={setSongs} setNextToken={setNextToken} nextToken={nextToken} currentPlaylistId={currentPlaylistId} />
