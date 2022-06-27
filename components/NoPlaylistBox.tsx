@@ -1,7 +1,6 @@
-import { Typography } from '@mui/material'
+import { Container, Typography } from '@mui/material'
 import React from 'react'
 import arrow from '../public/arrow.svg';
-import { motion } from 'framer-motion';
 
 import Image from 'next/image';
 
@@ -9,16 +8,16 @@ type Props = {}
 
 const NoPlaylistBox = (props: Props) => {
     return (
-        <div style={{ ...styles.container, flexDirection: 'column' }}>
+        <Container disableGutters sx={{ ...styles.container, flexDirection: 'column' }}>
             <Image alt='arrowUp' className='arrow' src={arrow} height={300} width={100} />
             <Typography textAlign={'center'} sx={styles.title} variant='h4'>Add your first playlist!</Typography>
-        </div>
+        </Container>
     )
 }
 
 const styles = {
     container: {
-        height: '50vh',
+        height: { xs: '80vh', md: '40vh' },
         width: '100%',
         display: 'flex',
         alignItems: 'center',

@@ -10,9 +10,10 @@ type Props = {
     setNextToken: (token: string | null) => void;
     setCurrentPlaylistId: (id: string | null) => void;
     handleOpen: () => void;
+    setLoading: (loading: boolean) => void;
 }
 
-const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlaylistId }: Props) => {
+const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlaylistId, setLoading }: Props) => {
 
     const [url, setUrl] = useState('');
     const [name, setName] = useState('');
@@ -55,7 +56,9 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
                 localStorage.setItem('playlists', JSON.stringify(playlists))
             }
             )
-            .then(() => handleOpen())
+            .then(() => {
+                if (open) handleOpen()
+            })
             .catch(() => {
                 setError(true)
                 setInputLabel('Invalid Playlist URL')
@@ -63,10 +66,12 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
     }
 
     useEffect(() => {
+        setLoading(true)
         const playlists = JSON.parse(localStorage.getItem('playlists') || '[]')
         if (playlists.length > 0) {
             getPlaylist(playlists[0].url)
         }
+        setLoading(false)
     }
         , [])
 

@@ -10,9 +10,10 @@ type Props = {
     songs: any[]
     setNextToken: (token: string | null) => void
     setCurrentPlaylistId: (id: string | null) => void
+    setLoading: (loading: boolean) => void
 }
 
-export default function PlaylistMenu({ setSongs, songs, setNextToken, setCurrentPlaylistId }: Props) {
+export default function PlaylistMenu({ setSongs, songs, setNextToken, setCurrentPlaylistId, setLoading }: Props) {
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => {
@@ -22,9 +23,7 @@ export default function PlaylistMenu({ setSongs, songs, setNextToken, setCurrent
     return (
         <Container disableGutters sx={{ position: 'relative', pt: 2, height: '100%' }} >
             <Button variant='contained' color='primary' sx={styles.button} onClick={handleOpen}>Playlist Menu</Button>
-            {open && (
-                <GetPlaylist handleOpen={handleOpen} setSongs={setSongs} open={open} setNextToken={setNextToken} setCurrentPlaylistId={setCurrentPlaylistId} />
-            )}
+            <GetPlaylist setLoading={setLoading} handleOpen={handleOpen} setSongs={setSongs} open={open} setNextToken={setNextToken} setCurrentPlaylistId={setCurrentPlaylistId} />
         </Container>
     );
 }

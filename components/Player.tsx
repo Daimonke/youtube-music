@@ -106,6 +106,7 @@ const styles = {
         alignItems: 'space-between',
         flexDirection: { xs: 'column', md: 'row' },
         gap: 2,
+        p: 2
     },
     songsContainer: {
         mt: { xs: 2, md: 0 },
