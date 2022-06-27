@@ -87,7 +87,7 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId }:
                                         height={90}
                                         style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }}
                                     /> : null}
-                                <p style={{ wordBreak: 'break-word', textAlign: 'left', width: '100%', padding: 5 }}>{song.snippet?.title}</p>
+                                <p style={{ wordBreak: 'break-word', textAlign: 'left', width: '100%', padding: '0 5px' }}>{song.snippet?.title}</p>
                             </Container>
                         ))}
                     </Container>
