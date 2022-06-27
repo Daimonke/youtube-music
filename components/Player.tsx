@@ -41,6 +41,7 @@ const Player = ({ songs }: Props) => {
                         controls
                         url={currentUrl}
                         width='100%'
+                        height='40vh'
                         playing={true}
                         volume={0.5}
                         onReady={() => {
@@ -51,15 +52,14 @@ const Player = ({ songs }: Props) => {
                     <Container disableGutters sx={styles.songsContainer}>
                         {songs.map((song, index) => (
                             <Container disableGutters sx={styles.songCard} key={index} onClick={() => handleSong(song, index)}>
-                                <div style={{ position: 'relative', height: '100%', width: 200 }}>
-                                    <Image src={song.snippet?.thumbnails?.high?.url}
-                                        alt={song.snippet.title}
-                                        layout="fixed"
-                                        width={200}
-                                        height={150}
-                                    />
-                                </div>
-                                <p style={{ wordBreak: 'break-word' }}>{song.snippet?.title}</p>
+                                <Image src={song.snippet?.thumbnails?.high?.url}
+                                    alt={song.snippet.title}
+                                    layout="fixed"
+                                    width={250}
+                                    height={120}
+                                    style={{ borderTopLeftRadius: 5, borderBottomLeftRadius: 5 }}
+                                />
+                                <p style={{ wordBreak: 'break-word', textAlign: 'left', width: '100%', padding: 5 }}>{song.snippet?.title}</p>
                             </Container>
                         ))}
                     </Container>
@@ -71,15 +71,16 @@ const Player = ({ songs }: Props) => {
 
 const styles = {
     container: {
-        mt: 2,
+        mt: { xs: 2, md: 5 },
         display: 'flex',
         justifyContent: 'space-between',
         flexDirection: { xs: 'column', md: 'row' },
         gap: 2,
+        overflow: 'scroll',
     },
     songsContainer: {
         overflow: 'scroll',
-        height: { xs: '50vh', md: '80vh' },
+        height: { xs: '45vh', md: '40vh' },
     },
     songCard: {
         display: 'flex',
@@ -87,8 +88,7 @@ const styles = {
         gap: 2,
         width: '100%',
         borderRadius: '5px',
-        boxShadow: '0px 0px 10px rgba(0,0,0,0.4)',
-        backgroundColor: 'rgb(238, 238, 238)',
+        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
         mb: 2,
         cursor: 'pointer',
         '&:hover': {

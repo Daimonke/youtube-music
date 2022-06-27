@@ -13,7 +13,7 @@ const Home: NextPage = () => {
   const [songs, setSongs] = useState<any[]>([]);
 
   return (
-    <Container sx={{ height: '100vh' }}>
+    <Container >
       <Head>
         <title>Youtube playlist player</title>
         <meta name="description" content="Play your youtube playlist without any ads" />

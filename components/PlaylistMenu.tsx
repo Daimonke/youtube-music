@@ -30,6 +30,5 @@ const styles = {
         display: 'block',
         margin: '0 auto',
         width: '50%',
-        p: 2
     }
 }
