@@ -1,17 +1,14 @@
 import { Button, Container, TextField } from '@mui/material'
 import React, { useState } from 'react'
 import { motion } from "framer-motion"
-import { style } from '@mui/system';
 
 
 type Props = {
-    handleOpen: () => void;
     setSongs: (songs: any[]) => void;
     open: boolean;
-    songs: any[];
 }
 
-const GetPlaylist = ({ handleOpen, setSongs, open, songs }: Props) => {
+const GetPlaylist = ({ setSongs, open }: Props) => {
 
     const [url, setUrl] = useState('https://www.youtube.com/watch?v=15gGZQNlDVo&list=PL4GgJODQxydGVmSyYDn_zF4OS6w4Lw2p8&index=2')
     const [inputLabel, setInputLabel] = useState('Playlist URL')
@@ -29,7 +26,7 @@ const GetPlaylist = ({ handleOpen, setSongs, open, songs }: Props) => {
             .then(res => res.json())
             .then(res => {
                 console.log(res.items)
-                setSongs([...res.items, ...songs])
+                setSongs(res.items)
             }
             )
             .catch(() => {

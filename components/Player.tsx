@@ -1,38 +1,70 @@
-import { Container } from '@mui/material';
+import { CircularProgress, Container, Typography } from '@mui/material';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import React from 'react'
-const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
+import React, { useEffect, useState } from 'react'
+import NoPlaylistBox from './NoPlaylistBox';
+const ReactPlayer = dynamic(() => import("react-player/youtube"), { ssr: false });
 
 type Props = {
     songs: any[]
 }
 
 const Player = ({ songs }: Props) => {
+    const [currentSong, setCurrentSong] = useState('');
+    const [currentUrl, setCurrentUrl] = useState('');
+
+    const handleSong = (song: any, index: number) => {
+        setCurrentSong(song);
+        setCurrentUrl(getSongUrl(song));
+    }
+
+    const getSongUrl = (song: any) => {
+        if (!song) return '';
+        return `https://www.youtube.com/watch?v=${song.snippet.resourceId.videoId}`
+    }
+
+    useEffect(() => {
+        if (songs.length > 0) {
+            setCurrentSong(songs[0]);
+            setCurrentUrl(getSongUrl(songs[0]));
+        }
+    }
+        , [songs]);
+
 
     return (
         <Container disableGutters sx={styles.container}>
-            <ReactPlayer
-                controls
-                url='https://www.youtube.com/watch?v=15gGZQNlDVo&list=PL4GgJODQxydGVmSyYDn_zF4OS6w4Lw2p8&index=2'
-                playing={true}
-                width='100%'
-            />
-            <Container disableGutters sx={styles.songsContainer}>
-                {songs.map((song, index) => (
-                    <Container disableGutters sx={styles.songCard} key={index}>
-                        <div style={{ position: 'relative', height: '100%', width: 200 }}>
-                            <Image src={song.snippet?.thumbnails?.high?.url}
-                                alt={song.snippet.title}
-                                layout="fixed"
-                                width={200}
-                                height={150}
-                            />
-                        </div>
-                        <p style={{ wordBreak: 'break-word' }}>{song.snippet?.title}</p>
+            {songs.length === 0 ? <NoPlaylistBox /> :
+                <>
+                    <ReactPlayer
+                        fallback={<CircularProgress />}
+                        controls
+                        url={currentUrl}
+                        width='100%'
+                        playing={true}
+                        volume={0.5}
+                        onReady={() => {
+                            console.log('onReady')
+                        }
+                        }
+                    />
+                    <Container disableGutters sx={styles.songsContainer}>
+                        {songs.map((song, index) => (
+                            <Container disableGutters sx={styles.songCard} key={index} onClick={() => handleSong(song, index)}>
+                                <div style={{ position: 'relative', height: '100%', width: 200 }}>
+                                    <Image src={song.snippet?.thumbnails?.high?.url}
+                                        alt={song.snippet.title}
+                                        layout="fixed"
+                                        width={200}
+                                        height={150}
+                                    />
+                                </div>
+                                <p style={{ wordBreak: 'break-word' }}>{song.snippet?.title}</p>
+                            </Container>
+                        ))}
                     </Container>
-                ))}
-            </Container>
+                </>
+            }
         </Container>
     )
 }
