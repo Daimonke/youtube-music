@@ -35,7 +35,7 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
     }
 
     const getPlaylist = (url: string) => {
-        if (!url || !url.includes('list=')) return displayError();
+        if (!url || !url.includes('list=')) return displayError(), setLoading(false);
         const playlistId = url.split('list=')[1].split('&')[0];
         fetch(`/api/playlist/?playlistId=${playlistId}`)
             .then(res => res.json())
@@ -47,7 +47,7 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
                 setInputLabel('Playlist URL')
                 const playlists = JSON.parse(localStorage.getItem('playlists') || '[]')
                 setPlaylists(playlists)
-                if (playlists.some((playlist: { url: string; }) => playlist.url === url)) return;
+                if (playlists.some((playlist: { url: string; }) => playlist.url === url)) return setLoading(false);
                 playlists.unshift({
                     name: name || 'Playlist',
                     url: url,
@@ -58,20 +58,30 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
             )
             .then(() => {
                 if (open) handleOpen()
+                setLoading(false)
             })
             .catch(() => {
                 setError(true)
                 setInputLabel('Invalid Playlist URL')
+                setLoading(false)
             })
     }
 
+    const handleRemove = (url: string) => {
+        const playlists = JSON.parse(localStorage.getItem('playlists') || '[]')
+        const newPlaylists = playlists.filter((playlist: { url: string; }) => playlist.url !== url)
+        localStorage.setItem('playlists', JSON.stringify(newPlaylists))
+        setPlaylists(newPlaylists)
+    }
+
     useEffect(() => {
-        setLoading(true)
         const playlists = JSON.parse(localStorage.getItem('playlists') || '[]')
         if (playlists.length > 0) {
             getPlaylist(playlists[0].url)
+        } else {
+            setLoading(false)
         }
-        setLoading(false)
+
     }
         , [])
 
@@ -105,7 +115,10 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
                                         <p>{index + 1}. {playlist.name}</p>
                                         <p style={{ fontSize: '0.9em', color: 'gray' }}>{playlist.totalResults} songs</p>
                                     </div>
-                                    <Button key={index} variant='text' color='primary' onClick={() => getPlaylist(playlist.url)}>Open</Button>
+                                    <div style={{ display: 'flex', gap: 15 }}>
+                                        <Button key={index} variant='text' color='error' onClick={() => handleRemove(playlist.url)}>Remove</Button>
+                                        <Button key={index} variant='text' color='primary' onClick={() => getPlaylist(playlist.url)}>Open</Button>
+                                    </div>
                                 </Container>
                             ))}
                             <Button variant='contained' color='error' sx={styles.button} onClick={handleOpen}>Close</Button>

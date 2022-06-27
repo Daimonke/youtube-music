@@ -9,8 +9,9 @@ const Loading = ({ loading }: Props) => {
     return (
         <>
             <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: 'black' }}
+                sx={{ color: '#fff', zIndex: 1, backgroundColor: 'black' }}
                 open={loading}
+                transitionDuration={0}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
