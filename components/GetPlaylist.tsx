@@ -89,7 +89,9 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
                     )}
                     {alignment === 'My' && (
                         <>
-
+                            {playlists.length === 0 ?
+                                <p style={{ textAlign: 'center' }}>No playlists yet..</p>
+                                : null}
                             {playlists.map((playlist: {
                                 totalResults: number; url: string; name: string;
                             }, index: number) => (
