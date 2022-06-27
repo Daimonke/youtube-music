@@ -42,7 +42,7 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
             .then(res => {
                 setNextToken(res.nextPageToken)
                 setCurrentPlaylistId(playlistId)
-                setSongs(res.items)
+                setSongs(res.items.filter((item: { snippet: { title: string; }; }) => item.snippet.title !== 'Deleted video'))
                 setError(false)
                 setInputLabel('Playlist URL')
                 const playlists = JSON.parse(localStorage.getItem('playlists') || '[]')

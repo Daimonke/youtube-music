@@ -1,7 +1,7 @@
 import { Button, CircularProgress, Container, Typography } from '@mui/material';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import NoPlaylistBox from './NoPlaylistBox';
 const ReactPlayer = dynamic(() => import("react-player/youtube"), { ssr: false });
 
@@ -16,6 +16,7 @@ type Props = {
 const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId }: Props) => {
     const [currentSong, setCurrentSong] = useState(0);
     const [currentUrl, setCurrentUrl] = useState('');
+    const [canUpdate, setCanUpdate] = useState(true);
 
     const handleSong = (song: any, index: number) => {
         setCurrentSong(index);
@@ -27,12 +28,15 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId }:
         return `https://www.youtube.com/watch?v=${song.snippet.resourceId.videoId}`
     }
 
-    const handleLoadMore = () => {
-        if (!nextToken) return;
+    const handleLoadMore = async () => {
+        if (!nextToken) return setCanUpdate(true);
         fetch(`/api/moreSongs/?playlistId=${currentPlaylistId}&pageToken=${nextToken}`)
             .then(res => res.json())
             .then(res => {
-                setSongs([...songs, ...res.items]);
+                setSongs([
+                    ...songs,
+                    ...res.items.filter((item: { snippet: { title: string; }; }) => item.snippet.title !== 'Deleted video')
+                ]);
                 setNextToken(res.nextPageToken);
             }
             )
@@ -40,13 +44,16 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId }:
                 setNextToken(null);
             }
             )
-
+            .finally(() => setCanUpdate(true))
     }
 
     const handleScroll = (e: any) => {
-        if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight) handleLoadMore();
-        console.log()
+        if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight && canUpdate) {
+            setCanUpdate(false)
+            handleLoadMore();
+        }
     }
+
 
     useEffect(() => {
         if (songs?.length > 0) {
@@ -55,7 +62,6 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId }:
         }
     }
         , [songs]);
-
 
     return (
         <Container disableGutters sx={styles.container}>
