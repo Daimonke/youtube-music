@@ -49,7 +49,7 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId, l
     }
 
     const handleScroll = (e: any) => {
-        if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight && canUpdate) {
+        if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight - 10 && canUpdate) {
             setCanUpdate(false)
             handleLoadMore();
         }
