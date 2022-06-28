@@ -65,6 +65,7 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
                 setInputLabel('Invalid Playlist URL')
                 setLoading(false)
             })
+            .finally(() => setLoading(false))
     }
 
     const handleRemove = (url: string) => {

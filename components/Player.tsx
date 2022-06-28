@@ -1,7 +1,7 @@
-import { Button, CircularProgress, Container, Typography } from '@mui/material';
+import { CircularProgress, Container, Typography } from '@mui/material';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import NoPlaylistBox from './NoPlaylistBox';
 const ReactPlayer = dynamic(() => import("react-player/youtube"), { ssr: false });
 
@@ -11,9 +11,10 @@ type Props = {
     currentPlaylistId: string | null
     setSongs: (songs: any[]) => void
     setNextToken: (token: string | null) => void
+    loading: boolean
 }
 
-const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId }: Props) => {
+const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId, loading }: Props) => {
     const [currentSong, setCurrentSong] = useState(0);
     const [currentUrl, setCurrentUrl] = useState('');
     const [canUpdate, setCanUpdate] = useState(true);
@@ -54,14 +55,12 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId }:
         }
     }
 
-
     useEffect(() => {
-        if (songs?.length > 0) {
-            setCurrentSong(0);
+        if (songs?.length > 0 && currentSong === 0) {
             setCurrentUrl(getSongUrl(songs[0]));
         }
     }
-        , [songs]);
+        , [currentSong, songs]);
 
     return (
         <Container disableGutters sx={styles.container}>
@@ -114,7 +113,8 @@ const styles = {
     },
     songsContainer: {
         mt: { xs: 2, md: 0 },
-        overflow: 'scroll',
+        overflowY: 'scroll',
+        scrollBehavior: 'smooth',
         height: { xs: 'calc(70vh - 140px)', md: '50vh' },
     },
     songCard: {
@@ -128,7 +128,7 @@ const styles = {
         mb: 1.2,
         cursor: 'pointer',
         '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.3)'
+            backgroundColor: 'rgba(255, 255, 255, 0.3)',
         },
     },
     active: {
