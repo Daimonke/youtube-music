@@ -17,7 +17,7 @@ const Home: NextPage = () => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <Container>
-        {/* <Loading loading={loading} /> */}
+        <Loading loading={loading} />
         <PlaylistMenu setSongs={setSongs} songs={songs} setNextToken={setNextToken} setCurrentPlaylistId={setCurrentPlaylistId} setLoading={setLoading} />
         <Player loading={loading} songs={songs} setSongs={setSongs} setNextToken={setNextToken} nextToken={nextToken} currentPlaylistId={currentPlaylistId} />
       </Container>
