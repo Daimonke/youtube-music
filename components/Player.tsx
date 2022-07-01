@@ -34,6 +34,7 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId, l
         fetch(`/api/moreSongs/?playlistId=${currentPlaylistId}&pageToken=${nextToken}`)
             .then(res => res.json())
             .then(res => {
+                console.log('Loading')
                 setSongs([
                     ...songs,
                     ...res.items.filter((item: { snippet: { title: string; }; }) => item.snippet.title !== 'Deleted video')
@@ -48,8 +49,9 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId, l
             .finally(() => setCanUpdate(true))
     }
 
-    const handleScroll = (e: any) => {
-        if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight - 10 && canUpdate) {
+    const handleScroll = (e: React.UIEvent) => {
+        if (!canUpdate) return;
+        if (e.currentTarget.scrollTop + e.currentTarget.clientHeight >= e.currentTarget.scrollHeight - 200 && canUpdate) {
             setCanUpdate(false)
             handleLoadMore();
         }
@@ -74,7 +76,6 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId, l
                             width='100%'
                             height='100%'
                             playing={true}
-                            light
                             onEnded={() => {
                                 setCurrentSong(currentSong + 1);
                                 setCurrentUrl(getSongUrl(songs[currentSong + 1]));

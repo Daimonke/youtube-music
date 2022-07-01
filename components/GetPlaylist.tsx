@@ -117,8 +117,8 @@ const GetPlaylist = ({ handleOpen, setSongs, open, setNextToken, setCurrentPlayl
                                         <p style={{ fontSize: '0.9em', color: 'gray' }}>{playlist.totalResults} songs</p>
                                     </div>
                                     <div style={{ display: 'flex', gap: 15 }}>
-                                        <Button key={index} variant='text' color='error' onClick={() => handleRemove(playlist.url)}>Remove</Button>
-                                        <Button key={index} variant='text' color='primary' onClick={() => getPlaylist(playlist.url)}>Open</Button>
+                                        <Button variant='text' color='error' onClick={() => handleRemove(playlist.url)}>Remove</Button>
+                                        <Button variant='text' color='primary' onClick={() => getPlaylist(playlist.url)}>Open</Button>
                                     </div>
                                 </Container>
                             ))}
