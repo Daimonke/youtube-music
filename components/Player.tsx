@@ -84,7 +84,7 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId, l
                     </Container>
                     <Container disableGutters sx={styles.songsContainer} onScroll={handleScroll}>
                         {songs?.map((song, index) => (
-                            <Container disableGutters sx={[styles.songCard, index === currentSong ? styles.active : null]} key={index} className='background' onClick={() => handleSong(song, index)}>
+                            <Container disableGutters sx={[styles.songCard, index === currentSong ? styles.active : null]} key={index} className='background noScrollbar' onClick={() => handleSong(song, index)}>
                                 {song?.snippet?.thumbnails?.high?.url ?
                                     <Image src={song.snippet.thumbnails.high.url}
                                         alt={song.snippet.title}
@@ -117,6 +117,16 @@ const styles = {
         overflowY: 'scroll',
         scrollBehavior: 'smooth',
         height: { xs: 'calc(70vh - 140px)', md: '50vh' },
+        // hide scrollbar all browsers
+        scrollBarWith: 'none',
+        '-ms-overflow-style': 'none',
+        '&::-webkit-scrollbar': {
+            display: 'none',
+            width: 0,
+            height: 0
+        }
+
+
     },
     songCard: {
         color: 'white',
