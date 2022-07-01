@@ -34,10 +34,12 @@ const Player = ({ songs, setSongs, setNextToken, nextToken, currentPlaylistId, l
         fetch(`/api/moreSongs/?playlistId=${currentPlaylistId}&pageToken=${nextToken}`)
             .then(res => res.json())
             .then(res => {
-                console.log('Loading')
                 setSongs([
                     ...songs,
-                    ...res.items.filter((item: { snippet: { title: string; }; }) => item.snippet.title !== 'Deleted video')
+                    ...res.items.filter((item: { snippet: { title: string; }; }) => (
+                        item.snippet.title !== 'Deleted video' &&
+                        item.snippet.title !== 'Private video'
+                    ))
                 ]);
                 setNextToken(res.nextPageToken);
             }
@@ -119,7 +121,7 @@ const styles = {
         height: { xs: 'calc(70vh - 140px)', md: '50vh' },
         // hide scrollbar all browsers
         scrollBarWith: 'none',
-        '-ms-overflow-style': 'none',
+        msOverflowStyle: 'none',
         '&::-webkit-scrollbar': {
             display: 'none',
             width: 0,
