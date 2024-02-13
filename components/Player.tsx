@@ -1,7 +1,7 @@
 import { CircularProgress, Container, Typography } from "@mui/material";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import NoPlaylistBox from "./NoPlaylistBox";
 const ReactPlayer = dynamic(() => import("react-player/youtube"), {
   ssr: false,
@@ -24,6 +24,7 @@ const Player = ({
   currentPlaylistId,
   loading,
 }: Props) => {
+  const wakeLock = useRef<WakeLockSentinel | undefined>();
   const [currentSong, setCurrentSong] = useState(0);
   const [currentUrl, setCurrentUrl] = useState("");
   const [canUpdate, setCanUpdate] = useState(true);
@@ -78,6 +79,16 @@ const Player = ({
       setCurrentUrl(getSongUrl(songs[0]));
     }
   }, [currentSong, songs]);
+
+  useEffect(() => {
+    navigator.wakeLock
+      ?.request("screen")
+      .then((res) => (wakeLock.current = res));
+
+    return () => {
+      wakeLock.current?.release();
+    };
+  }, []);
 
   return (
     <Container disableGutters sx={styles.container}>
