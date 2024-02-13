@@ -1,8 +1,9 @@
-import { CircularProgress, Container, Typography } from "@mui/material";
+import { CircularProgress, Container } from "@mui/material";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import NoPlaylistBox from "./NoPlaylistBox";
+
 const ReactPlayer = dynamic(() => import("react-player/youtube"), {
   ssr: false,
 });
