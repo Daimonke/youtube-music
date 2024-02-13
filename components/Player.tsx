@@ -82,12 +82,28 @@ const Player = ({
   }, [currentSong, songs]);
 
   useEffect(() => {
-    navigator.wakeLock
-      ?.request("screen")
-      .then((res) => (wakeLock.current = res));
+    const requestWakeLock = async () => {
+      try {
+        wakeLock.current = await navigator.wakeLock?.request("screen");
+      } catch (err) {
+        return;
+      }
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        requestWakeLock();
+      } else {
+        wakeLock.current?.release();
+      }
+    };
+
+    requestWakeLock();
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
       wakeLock.current?.release();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, []);
 
