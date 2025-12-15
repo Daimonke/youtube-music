@@ -14,7 +14,6 @@ type Props = {
   currentPlaylistId: string | null;
   setSongs: (songs: any[]) => void;
   setNextToken: (token: string | null) => void;
-  loading: boolean;
 };
 
 const Player = ({
@@ -23,12 +22,13 @@ const Player = ({
   setNextToken,
   nextToken,
   currentPlaylistId,
-  loading,
 }: Props) => {
   const wakeLock = useRef<WakeLockSentinel | undefined>();
   const [currentSong, setCurrentSong] = useState(0);
   const [currentUrl, setCurrentUrl] = useState("");
   const [canUpdate, setCanUpdate] = useState(true);
+  const songsContainerRef = useRef<HTMLDivElement>(null);
+  const songRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
   const handleSong = (song: any, index: number) => {
     setCurrentSong(index);
@@ -72,6 +72,34 @@ const Player = ({
     ) {
       setCanUpdate(false);
       handleLoadMore();
+    }
+  };
+
+  const isElementVisible = (
+    element: HTMLDivElement | null,
+    container: HTMLDivElement | null
+  ): boolean => {
+    if (!element || !container) return false;
+
+    // Use getBoundingClientRect for accurate positioning
+    const containerRect = container.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+
+    // Check if any part of the element is visible within the container's viewport
+    // Element is visible if its bottom is below container's top AND its top is above container's bottom
+    return (
+      elementRect.bottom > containerRect.top &&
+      elementRect.top < containerRect.bottom
+    );
+  };
+
+  const scrollToNextSong = (nextIndex: number) => {
+    const nextSongElement = songRefs.current.get(nextIndex);
+    if (nextSongElement && songsContainerRef.current) {
+      nextSongElement.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
     }
   };
 
@@ -123,8 +151,29 @@ const Player = ({
               playing={true}
               stopOnUnmount={false}
               onEnded={() => {
-                setCurrentSong(currentSong + 1);
-                setCurrentUrl(getSongUrl(songs[currentSong + 1]));
+                const nextIndex = currentSong + 1;
+                if (nextIndex < songs.length) {
+                  // Store current song index before state update
+                  const currentIndex = currentSong;
+                  const currentSongElement = songRefs.current.get(currentIndex);
+
+                  setCurrentSong(nextIndex);
+                  setCurrentUrl(getSongUrl(songs[nextIndex]));
+
+                  // Check visibility after a brief delay to ensure DOM is stable
+                  // Use requestAnimationFrame to ensure DOM is updated
+                  requestAnimationFrame(() => {
+                    const isCurrentVisible = isElementVisible(
+                      currentSongElement || null,
+                      songsContainerRef.current
+                    );
+
+                    // Only scroll if current song was visible
+                    if (isCurrentVisible) {
+                      scrollToNextSong(nextIndex);
+                    }
+                  });
+                }
               }}
             />
           </Container>
@@ -132,6 +181,7 @@ const Player = ({
             disableGutters
             sx={styles.songsContainer}
             onScroll={handleScroll}
+            ref={songsContainerRef}
           >
             {songs?.map((song, index) => (
               <Container
@@ -143,6 +193,13 @@ const Player = ({
                 key={index}
                 className="background noScrollbar"
                 onClick={() => handleSong(song, index)}
+                ref={(el) => {
+                  if (el) {
+                    songRefs.current.set(index, el);
+                  } else {
+                    songRefs.current.delete(index);
+                  }
+                }}
               >
                 {song?.snippet?.thumbnails?.high?.url ? (
                   <Image
